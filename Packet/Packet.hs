@@ -7,5 +7,5 @@ import Control.Monad
 import Command
 import Procedure
 
-data Packet a = Packet [Command] (Procedure a)
+data Packet a = Packet [Command] (Maybe (Procedure a))
                 deriving Show

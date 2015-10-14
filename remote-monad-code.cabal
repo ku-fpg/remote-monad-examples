@@ -1,0 +1,62 @@
+name:                remote-monad-code
+version:             0.1.0.0
+-- synopsis:            
+-- description:         
+license:             BSD3
+license-file:        LICENSE
+author:              Andy Gill, Justin Dawson, Mark Grebe
+maintainer:          jdawson@ku.edu
+-- copyright:           
+-- category:            
+build-type:          Simple
+extra-source-files:  README.md, README.md~
+cabal-version:       >=1.10
+
+executable remote-monad-code-async
+  hs-source-dirs:      Command
+  main-is:             Main.hs
+  build-depends:       base >=4.7 && <4.9
+  default-language:    Haskell2010
+  
+executable remote-monad-code-sync
+  hs-source-dirs:      Procedure
+  main-is:             Main.hs
+  build-depends:       base >=4.7 && <4.9, random, mtl >= 2.1
+  default-language:    Haskell2010
+  
+executable remote-monad-code-weak
+  hs-source-dirs:      Weak, Command, Procedure
+  main-is:             Main.hs
+  build-depends:       base >=4.7 && <4.9, random, transformers, mtl >= 2.1
+  default-language:    Haskell2010
+
+-- rename ShallowStrong?
+executable remote-monad-code-shallow-strong
+  hs-source-dirs:      Strong, Command, Procedure, Packet
+  main-is:             Main.hs
+  build-depends:       base >=4.7 && <4.9,
+                       mtl,
+                       random
+  default-language:    Haskell2010
+
+--executable remote-monad-code-shallow-weak
+--  main-is:             ShallowWeak.hs
+--  build-depends:       base >=4.7 && <4.9, random, mtl >= 2.1
+--  default-language:    Haskell2010
+  
+
+--executable remote-monad-code-transformers-strong
+--  main-is:             TransformersStrong.hs
+--  build-depends:       base >=4.7 && <4.9, random, mtl >= 2.1
+--  default-language:    Haskell2010
+  
+--executable remote-monad-code-deep
+--  main-is:             TransformersDeep.hs
+--  build-depends:       base >=4.7 && <4.9, random, mtl >= 2.1
+--  default-language:    Haskell2010
+
+
+--executable remote-applicative-functor-code-transformers-strong
+--  main-is:             ApplicativeFunctor.hs
+--  build-depends:       base >=4.7 && <4.9, random, mtl >= 2.1
+--  default-language:    Haskell2010

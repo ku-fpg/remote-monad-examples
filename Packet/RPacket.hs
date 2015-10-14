@@ -9,10 +9,12 @@ import Control.Monad
 import RCommand
 import RProcedure
 
-data RPacket = Packet [RCommand] RProcedure
-               deriving Read
+data RPacket = Packet [RCommand] (Maybe RProcedure)
+               deriving (Read, Show)
 
 execRPacket :: RPacket -> IO String
 execRPacket (Packet cs p) = do
         mapM_ execRCommand cs
-	execRProcedure p
+        case p of
+         Just p' -> execRProcedure p'
+         _ -> return $ show ()

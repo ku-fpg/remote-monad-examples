@@ -3,7 +3,7 @@ module RCommand
 where
 
 data RCommand = Say String
-                deriving Read
+                deriving (Read, Show)
 
 execRCommand :: RCommand -> IO ()
 execRCommand (Say str) = putStrLn ("Remote: " ++ str)
