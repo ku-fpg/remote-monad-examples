@@ -39,27 +39,15 @@ executable remote-monad-code-shallow-strong
                         random
    default-language:    Haskell2010
 
--- executable remote-monad-code-shallow-weak
---  hs-source-dirs:      ShallowWeak, Command, Procedure, ./
---  main-is:             Main.hs
---  build-depends:       base >=4.7 && <4.9, random, mtl >= 2.1
---  default-language:    Haskell2010
-  
-
--- executable remote-monad-code-transformers-strong
---   hs-source-dirs:      TransformersStrong, Command, Procedure, Packet
---   main-is:             Main.hs
---   build-depends:       base >=4.7 && <4.9, random, mtl >= 2.1
---   default-language:    Haskell2010
-  
---executable remote-monad-code-deep
---  main-is:             TransformersDeep.hs
---  build-depends:       base >=4.7 && <4.9, random, mtl >= 2.1
---  default-language:    Haskell2010
+executable remote-monad-code-deep
+  hs-source-dirs:      Deep
+  main-is:             Main.hs
+  build-depends:       base >=4.7 && <4.9, random, mtl >= 2.1
+  default-language:    Haskell2010
 
 
 executable remote-applicative-functor-strong
- hs-source-dirs:      ApplicativeFunctor,Command,Procedure, RPrim  
+ hs-source-dirs:      ApplicativeFunctor,Command,Procedure  
  main-is:             Main.hs
  build-depends:       base >=4.7 && <4.9, random, mtl >= 2.1
  default-language:    Haskell2010
