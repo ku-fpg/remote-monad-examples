@@ -1,23 +1,25 @@
-This contains the code examples used in remote monad paper.  Each
-example is in a directory contains a main that can be built using the
-included remote-monad-example.cabal file.
+This repo contains the code examples used in our remote monad paper.
+Each example is in a directory containing a main that can be built using
+the included remote-monad-example.cabal file.
 
 ## Examples
 
-Example | Desciption              | Local Implementation
--------|-------------------------|-------
-ASync  | send without reply      | `Command`
-Sync   | send and wait for reply | `Procedure a`
-Weak   | send primitives piecemeal | `ReaderT Device IO a`
-Strong | send packet             | `ReaderT Device (StateT [Command] IO) a`
-Applicative | send all commands and procedures | `WriterT [Prim] (State [String]) a` 
-Deep   | Procedures are embedded | `ReaderT Device (StateT ([Command],Id) IO) a`
+Example | Desciption                           | Regular Experession of Communication
+-------|---------------------------------------|-------
+ASync  | send without reply                    | `Command`
+Sync   | send and wait for reply               | `Procedure`
+Weak   | send primitives piecemeal             | `Command|Procedure`
+Strong | send packet                           | `Command+ | (Command* Procedure)`
+Applicative | send all commands and procedures | `(Command|Procedure)+`
+Deep   | Procedures are embedded as commands   | `Command* (Command|Procedure)`
 
- * Asynchronous Remote
- * Synchronous Remote
+`Remote` is a monad, which provides `Command`, `Procedure`, and
+the monadic, applicative and functor operations. In the Deep packet,
+the `Procedure` is simply a `Reply` constructor.
 
-As done in the remote monad paper, we include use non-GADT versions of
-our structures remotely. The details of
+As is done in the remote monad paper, we include use non-GADT versions of
+our structures remotely. We have GADT versions of the remotes; just ask.
+
 
 
 
