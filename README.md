@@ -2,7 +2,7 @@ This repo contains the code examples used in our remote monad paper.
 Each example is in a directory containing a main that can be built using
 the included remote-monad-example.cabal file.
 
-Example | Desciption                           | Regular Experession of Communication
+Example | Desciption                           | Regular Expression of Communication
 -------|---------------------------------------|-------
 ASync  | send without reply                    | `Command`
 Sync   | send and wait for reply               | `Procedure`
