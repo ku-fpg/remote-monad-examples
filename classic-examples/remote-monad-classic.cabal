@@ -1,4 +1,4 @@
-name:                remote-monad-code
+name:                remote-monad-classic
 version:             0.1.0.0
 -- synopsis:            
 -- description:         
@@ -12,26 +12,26 @@ build-type:          Simple
 extra-source-files:  README.md, README.md~
 cabal-version:       >=1.10
 
-executable remote-monad-code-async
+executable remote-monad-classic-async
   hs-source-dirs:      Command
   main-is:             Main.hs
   build-depends:       base >=4.7 && <4.9
   default-language:    Haskell2010
   
-executable remote-monad-code-sync
+executable remote-monad-classic-sync
   hs-source-dirs:      Procedure
   main-is:             Main.hs
   build-depends:       base >=4.7 && <4.9, random, mtl >= 2.1
   default-language:    Haskell2010
   
-executable remote-monad-code-weak
+executable remote-monad-classic-weak
   hs-source-dirs:      Weak, Command, Procedure
   main-is:             Main.hs
   build-depends:       base >=4.7 && <4.9, random, transformers, mtl >= 2.1
   default-language:    Haskell2010
 
 -- rename ShallowStrong?
-executable remote-monad-code-shallow-strong
+executable remote-monad-classic-shallow-strong
    hs-source-dirs:      Strong, Command, Procedure, Packet
    main-is:             Main.hs
    build-depends:       base >=4.7 && <4.9,
@@ -39,14 +39,14 @@ executable remote-monad-code-shallow-strong
                         random
    default-language:    Haskell2010
 
-executable remote-monad-code-deep
+executable remote-monad-classic-deep
   hs-source-dirs:      Deep
   main-is:             Main.hs
   build-depends:       base >=4.7 && <4.9, random, mtl >= 2.1
   default-language:    Haskell2010
 
 
-executable remote-applicative-functor-strong
+executable remote-applicative-classic-strong
  hs-source-dirs:      Applicative,Command,Procedure  
  main-is:             Main.hs
  build-depends:       base >=4.7 && <4.9, random, mtl >= 2.1
