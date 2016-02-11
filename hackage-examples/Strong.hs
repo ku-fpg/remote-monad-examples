@@ -4,9 +4,10 @@
 
 
 import  Control.Remote.Monad 
-import  Control.Remote.Monad.Packet.Weak
+import  Control.Remote.Monad.Packet.Strong
 import  Control.Natural (nat, run)
 import  System.Random (randomRIO)
+
 
 data Shape :: * where
    Square    :: Int ->        Shape
@@ -30,7 +31,7 @@ data MyCommand :: * where
 
 data MyProcedure :: * -> * where
    Screen ::  MyProcedure (Int,Int)
-   Uptime ::  MyProcedure Double
+   Uptime ::  MyProcedure (Double)
 
 
 getScreen :: RemoteMonad MyCommand MyProcedure (Int,Int)
@@ -39,19 +40,19 @@ getScreen = procedure Screen
 drawShape :: Shape -> RemoteMonad MyCommand MyProcedure ()
 drawShape sh = command (Draw sh) 
 
-getUptime :: RemoteMonad MyCommand MyProcedure Double
-getUptime = procedure Uptime
+uptime:: RemoteMonad MyCommand MyProcedure Double
+uptime = procedure Uptime
 ------------------------ Server Code ------------------------
-weakDispatch :: WeakPacket MyCommand MyProcedure a -> IO a
-weakDispatch (Procedure x) = procedureDispatch x
-weakDispatch (Command x )  = commandDispatch x
-
+strongDispatch :: StrongPacket MyCommand MyProcedure a -> IO a
+strongDispatch (Procedure x) = procedureDispatch x
+strongDispatch (Command x sp)  = do commandDispatch x
+                                    strongDispatch sp
+strongDispatch (Done) = return ()
 
 procedureDispatch :: MyProcedure a -> IO a
 -- Our screen is a fixed size of 100 x 100
 procedureDispatch (Screen) = return (100,100)
 procedureDispatch (Uptime) = randomRIO (10,1000)
-
 
 commandDispatch :: MyCommand -> IO ()
 commandDispatch (Color c) = undefined
@@ -84,19 +85,19 @@ commandDispatch (Draw sh)= do putStrLn "Start Remote Draw\n"
 
 
 send :: RemoteMonad MyCommand MyProcedure a -> IO a
-send = run $ runMonad $ nat weakDispatch
+send = run $ runMonad $ nat strongDispatch
 
 
 main:: IO()
 main =do 
       putStrLn "Let's draw things"
-      (screenSize, time) <- send $ do
+      (screenSize,time) <- send $ do
                        drawShape diamond
-                       x<- getScreen
+                       x <- getScreen
                        drawShape rectangle
                        drawShape square
-                       y <- getUptime
+                       y <- uptime
                        return (x,y)
        
       putStrLn $  "Local: Screen size: "++ (show screenSize)
-      putStrLn $  "Local: Uptime "++ (show time)
+      putStrLn $  "Local: Uptime: " ++ (show time)++ " hours"
