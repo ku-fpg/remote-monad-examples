@@ -8,41 +8,8 @@ import  Control.Remote.Monad.Packet.Applicative
 import  Control.Natural (nat, run)
 import  System.Random (randomRIO)
 
+import Types
 
-data Shape :: * where
-   Square    :: Int ->        Shape
-   Diamond   ::               Shape
-   Rectangle :: Int -> Int -> Shape
-
-
-square :: Shape
-square = Square 4 
-
-diamond :: Shape
-diamond = Diamond
-
-rectangle :: Shape
-rectangle = Rectangle 5 3
-
-data MyCommand :: * where
-   Color   :: String  -> MyCommand
-   Stroke  :: String  -> MyCommand
-   Draw    :: Shape   -> MyCommand
-
-data MyProcedure :: * -> * where
-   Screen ::  MyProcedure (Int,Int)
-   Uptime ::  MyProcedure (Double)
-
-
-getScreen :: RemoteMonad MyCommand MyProcedure (Int,Int)
-getScreen = procedure Screen
-
-drawShape :: Shape -> RemoteMonad MyCommand MyProcedure ()
-drawShape sh = command (Draw sh) 
-
-uptime:: RemoteMonad MyCommand MyProcedure Double
-uptime = procedure Uptime
------------------------- Server Code ------------------------
 applicativeDispatch :: ApplicativePacket MyCommand MyProcedure a -> IO a
 applicativeDispatch (Procedure ap x) = applicativeDispatch ap <*> procedureDispatch x
 applicativeDispatch (Command ap x)   = do commandDispatch x
@@ -96,7 +63,7 @@ main =do
                        x <- getScreen
                        drawShape rectangle
                        drawShape square
-                       y <- uptime
+                       y <- getUptime
                        return (x,y)
        
       putStrLn $  "Local: Screen size: "++ (show screenSize)
@@ -108,7 +75,7 @@ main =do
                        <*> getScreen
                        <* drawShape rectangle 
                        <* drawShape square
-                       <*> uptime
+                       <*> getUptime
        
       putStrLn $  "Local: Screen size: "++ (show screenSize)
       putStrLn $  "Local: Uptime: " ++ (show time)++ " hours"

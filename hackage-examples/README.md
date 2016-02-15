@@ -1,35 +1,12 @@
-This repo contains the code examples used in our remote monad paper.
-Each example is in a directory containing a main that can be built using
-the included remote-monad-example.cabal file.
+This repo contains the examples using the Hackage remote-monad library 
+There is really one example that is using different bundling strategies.
 
-Example | Desciption                           | Regular Expression of Communication
--------|---------------------------------------|-------
-ASync  | send without reply                    | `Command`
-Sync   | send and wait for reply               | `Procedure`
-Weak   | send primitives piecemeal             | `Command|Procedure`
-Strong | send packet                           | `Command+ | (Command* Procedure)`
-Applicative | send all commands and procedures | `(Command|Procedure)+`
-Deep   | Procedures are embedded as commands   | `Command* (Command|Procedure)`
+The Weak.hs is sending each Command and Procedure one at a time to
+the 'remote' process, whereas the Strong sends bundles of Commands
+with an ending (optional) Procedure. The Applicative example bundles
+up Commands and multiple Procedures that are used in an applicative
+context (no binds).
 
-`Remote` is a monad, which provides `Command`, `Procedure`, and
-the monadic, applicative and functor operations. In the Deep packet,
-the `Procedure` is simply a `Reply` constructor. In the other examples,
-`Command` and `Procedure` are:
-
-    data Command = Say String
-    data Procedure :: * -> * where
-      Temperature ::        Procedure Int
-      Toast       :: Int -> Procedure ()
-
-As is done in the remote monad paper, we include use non-GADT versions of
-our structures to simulate remote exectution. 
-We have GADT versions of the remote intepreters; just ask.
-
-
-
-
-
-
-
-
-
+These examples are running on the same machine, but you can plug in
+a function that sends these Commands and Procedures through the network
+and returns the result. 

@@ -8,40 +8,9 @@ import  Control.Remote.Monad.Packet.Strong
 import  Control.Natural (nat, run)
 import  System.Random (randomRIO)
 
-
-data Shape :: * where
-   Square    :: Int ->        Shape
-   Diamond   ::               Shape
-   Rectangle :: Int -> Int -> Shape
+import  Types
 
 
-square :: Shape
-square = Square 4 
-
-diamond :: Shape
-diamond = Diamond
-
-rectangle :: Shape
-rectangle = Rectangle 5 3
-
-data MyCommand :: * where
-   Color   :: String  -> MyCommand
-   Stroke  :: String  -> MyCommand
-   Draw    :: Shape   -> MyCommand
-
-data MyProcedure :: * -> * where
-   Screen ::  MyProcedure (Int,Int)
-   Uptime ::  MyProcedure (Double)
-
-
-getScreen :: RemoteMonad MyCommand MyProcedure (Int,Int)
-getScreen = procedure Screen
-
-drawShape :: Shape -> RemoteMonad MyCommand MyProcedure ()
-drawShape sh = command (Draw sh) 
-
-uptime:: RemoteMonad MyCommand MyProcedure Double
-uptime = procedure Uptime
 ------------------------ Server Code ------------------------
 strongDispatch :: StrongPacket MyCommand MyProcedure a -> IO a
 strongDispatch (Procedure x) = procedureDispatch x
@@ -96,7 +65,7 @@ main =do
                        x <- getScreen
                        drawShape rectangle
                        drawShape square
-                       y <- uptime
+                       y <- getUptime
                        return (x,y)
        
       putStrLn $  "Local: Screen size: "++ (show screenSize)
