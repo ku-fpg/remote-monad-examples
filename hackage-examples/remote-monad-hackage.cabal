@@ -12,45 +12,27 @@ build-type:          Simple
 extra-source-files:  README.md, README.md~
 cabal-version:       >=1.10
 
-executable remote-monad-hackage-weak
-  main-is:             Weak.hs
+executable remote-monad-hackage-client
+  main-is:             Client.hs
   build-depends:       base >=4.7 && <4.9
                      , natural-transformation >= 0.3.1 && < 0.4
-                     , random >= 1.1 && < 1.2
-                     , remote-monad == 0.2
-  default-language:    Haskell2010
-  
-executable remote-monad-hackage-strong
-  main-is:             Strong.hs
-  build-depends:       base >=4.7 && <4.9
-                     , natural-transformation >= 0.3.1 && < 0.4
-                     , random >= 1.1 && < 1.2
-                     , remote-monad == 0.2
-  default-language:    Haskell2010
-
-executable remote-monad-hackage-applicative
-  main-is:             Applicative.hs
-  build-depends:       base >=4.7 && <4.9
-                     , natural-transformation >= 0.3.1 && < 0.4
-                     , random >= 1.1 && < 1.2
-                     , remote-monad == 0.2
+                     , network-transport >= 0.4 && < 0.5
+                     , network-transport-tcp >= 0.5 && < 0.6
+                     , remote-binary == 0.1
+                     , remote-monad == 0.3
+                     , remote-transport == 0.1
   default-language:    Haskell2010
 
 
 executable remote-monad-hackage-server
   main-is:             Applicative.hs
-  build-depends:       base >=4.7 && <4.9
+  build-depends:       base                   >=4.7 && <4.9
+                     , binary                 >= 0.7 && < 0.9
                      , natural-transformation >= 0.3.1 && < 0.4
-                     , random >= 1.1 && < 1.2
-                     , remote-monad == 0.2
-                     , scotty
-  default-language:    Haskell2010
-
-executable remote-monad-hackage-server
-  main-is:             Applicative.hs
-  build-depends:       base >=4.7 && <4.9
-                     , lens >= 4.13 && < 4.14
-                     , natural-transformation >= 0.3.1 && < 0.4
-                     , remote-monad == 0.2
-                     , wreq >= 0.4 && < 0.5
+                     , network-transport      >= 0.4  && < 0.5
+                     , network-transport-tcp  >= 0.5  && < 0.6
+                     , remote-monad           == 0.3
+                     , remote-binary          == 0.1
+                     , remote-transport       == 0.1
+                     , random                 >= 1.1 && < 1.2
   default-language:    Haskell2010

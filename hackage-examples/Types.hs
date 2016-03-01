@@ -1,12 +1,11 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE KindSignatures #-}
-{-# LANGUAGE OverloadedStrings #-}
 
 module Types where
 
 import Control.Remote.Monad
-import Data.Aeson
-import Data.Text
+import Control.Remote.Monad.Binary
+import Data.Binary
 
 data Shape :: * where
    Square    :: Int ->        Shape
@@ -14,23 +13,22 @@ data Shape :: * where
    Rectangle :: Int -> Int -> Shape
   deriving (Show)
 
-instance ToJSON Shape where
-  toJSON (Square s) = object [ ("shape"::Text) .= ("square" ::Text)
-                             , ("length"::Text) .= s]
-  toJSON (Diamond) = object [ ("shape" :: Text) .= ("diamond"::Text)]
-  toJSON (Rectangle w h) = object [ ("shape"::Text) .= ("rectangle"::Text)
-                                 , ("width"::Text) .= w 
-                                 , ("height"::Text) .= h
-                                 ]
+instance Binary Shape where
+   put (Square n)      = do put (0 ::Word8)
+                            put n
+   put (Diamond)       =  put (1 :: Word8)
+   put (Rectangle w h) = do put (2 :: Word8)
+                            put w
+                            put h
+   get = do i <- get
+            case i :: Word8 of
+              0 -> do n <- get 
+                      return $ Square n
+              1 -> return Diamond
+              2 -> do w <- get
+                      h <- get
+                      return $ Rectangle w h
 
-instance FromJSON Shape where
-   parseJSON = withObject "Shape parser" $ \o -> do
-        shape <- o .: ("shape"::Text)
-        case (shape::Text) of
-          "square"    -> Square <$> o .: ("length"::Text)
-          "diamond"   -> return Diamond
-          "rectangle" -> Rectangle <$> o .: ("width"::Text)
-                                   <*> o .: ("height"::Text)
 
 square :: Shape
 square = Square 4 
@@ -45,22 +43,36 @@ data MyCommand :: * where
    Color   :: String  -> MyCommand
    Draw    :: Shape   -> MyCommand
 
-instance ToJSON MyCommand where
-    toJSON (Color s) = object [ ("method"::Text) .= ("color" ::Text)
-                              , ("params"::Text) .= s
-                              ]
-    toJSON (Draw s) = object [ ("method"::Text) .= ("draw"::Text)
-                             , ("params"::Text) .= s
-                             ]
+instance Binary MyCommand where
+    put (Color s) = do put (0 :: Word8)
+                       put s
+    put (Draw sh) = do put (1 :: Word8)
+                       put sh
+
+    get = do i <- get
+             case i :: Word8 of
+               0 ->do s <- get
+                      return $ Color s
+               1 ->do sh <- get
+                      return $ Draw sh
 
 
 data MyProcedure :: * -> * where
    Screen ::  MyProcedure (Int,Int)
    Uptime ::  MyProcedure Double
 
-instance ToJSON (MyProcedure a) where
-     toJSON (Screen) = object [ ("method"::Text) .= ("screen"::Text)]                    
-     toJSON (Uptime) = object [ ("method"::Text) .= ("uptime"::Text) ]                    
+instance BinaryQ MyProcedure where
+    putQ (Screen) = put (0::Word8)
+    putQ (Uptime) = put (1::Word8)
+
+    getQ= do i <- get
+             case i :: Word8 of
+               0 -> return $ Fmap put Screen 
+               1 -> return $ Fmap put Uptime
+
+    interpQ (Screen) = get
+    interpQ (Uptime) = get
+
 
 getScreen :: RemoteMonad MyCommand MyProcedure (Int,Int)
 getScreen = procedure Screen
